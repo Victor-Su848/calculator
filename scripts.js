@@ -12,7 +12,6 @@ function divide(num1, num2) {
     return num1 / num2;
 }
 function operate(func, num1, num2) {
-
     return func(num1, num2);
 }
 
@@ -27,6 +26,9 @@ const sevenBut = document.querySelector('#seven');
 const eightBut = document.querySelector('#eight');
 const nineBut = document.querySelector('#nine');
 const zeroBut = document.querySelector('#zero');
+const dotBut = document.querySelector('#dot');
+const signBut = document.querySelector('#sign');
+const percentageBut = document.querySelector('#percentage');
 
 const addBut = document.querySelector('#add');
 const subtractBut = document.querySelector('#subtract');
@@ -40,12 +42,10 @@ const enterBut = document.querySelector('#enter')
 //logic variables
 let num1 = null;
 let num2 = null;
-let currentOperator= null;
+let currentOperator = null;
 let clearDisplay = false;
 
 let num1Stored = false;
-
-let storedResult = false;
 
 //event listeners to add number to display when respective button is clicked
 oneBut.addEventListener('click', function () {
@@ -54,8 +54,8 @@ oneBut.addEventListener('click', function () {
         clearDisplay = false;
     }
     populateDisplay('1');
-    if(num1Stored) num2 = parseInt(displayDiv.textContent);
-    else num1 = parseInt(displayDiv.textContent);
+    if (num1Stored) num2 = parseFloat(displayDiv.textContent);
+    else num1 = parseFloat(displayDiv.textContent);
 });
 twoBut.addEventListener('click', function () {
     if (clearDisplay) {
@@ -63,8 +63,8 @@ twoBut.addEventListener('click', function () {
         clearDisplay = false;
     }
     populateDisplay('2');
-    if(num1Stored) num2 = parseInt(displayDiv.textContent);
-    else num1 = parseInt(displayDiv.textContent);
+    if (num1Stored) num2 = parseFloat(displayDiv.textContent);
+    else num1 = parseFloat(displayDiv.textContent);
 });
 threeBut.addEventListener('click', function () {
     if (clearDisplay) {
@@ -72,8 +72,8 @@ threeBut.addEventListener('click', function () {
         clearDisplay = false;
     }
     populateDisplay('3');
-    if(num1Stored) num2 = parseInt(displayDiv.textContent);
-    else num1 = parseInt(displayDiv.textContent);
+    if (num1Stored) num2 = parseFloat(displayDiv.textContent);
+    else num1 = parseFloat(displayDiv.textContent);
 });
 fourBut.addEventListener('click', function () {
     populateDisplay('4');
@@ -96,6 +96,38 @@ nineBut.addEventListener('click', function () {
 zeroBut.addEventListener('click', function () {
     populateDisplay('0');
 });
+dotBut.addEventListener('click', function() {
+    if (displayDiv.textContent.includes('.')) {
+        return;
+    }
+    if (clearDisplay) {
+        displayDiv.textContent = '.';
+        clearDisplay = false;
+    }
+    populateDisplay('.');
+    if (num1Stored) num2 = parseFloat(displayDiv.textContent);
+    else num1 = parseFloat(displayDiv.textContent);
+});
+signBut.addEventListener('click', function() {
+    if (clearDisplay) {
+        displayDiv.textContent = '-';
+        clearDisplay = false;
+    } else {
+        //current num is positive
+        if(parseFloat(displayDiv.textContent) > 0) {
+            displayDiv.textContent = '-' + displayDiv.textContent;
+        } else {
+            displayDiv.textContent = Math.abs(parseFloat(displayDiv.textContent));
+        }
+        if (num1Stored) num2 = parseFloat(displayDiv.textContent);
+        else num1 = parseFloat(displayDiv.textContent);
+    }
+    
+});
+percentageBut.addEventListener('click', function() {
+
+});
+
 
 
 //currentOperatorevent listeners to track what the current currentOperatoris
@@ -104,18 +136,21 @@ addBut.addEventListener('click', function () {
     //check if display is empty
     if (displayDiv.textContent == "") {
         return;
-    } 
+    }
     //display has number in it
     else {
         //if stored number exists, add the stored number and the displayed number.
         //the result is becomes the new stored number
 
-        if(num1 && !num2) {
+        if (num1 && !num2) {
             clearDisplay = true;
-            currentOperator= add;
+            currentOperator = add;
 
             num1Stored = true;
-        } else if(num1 && num2 && currentOperator) {
+
+        }
+        //get a result and store it as num1 while making num2 empty
+        else if (num1 && num2 && currentOperator) {
             const result = operate(currentOperator, num1, num2);
             displayDiv.textContent = result;
             num1 = result;
@@ -136,16 +171,16 @@ subtractBut.addEventListener('click', function () {
     //check if display is empty
     if (displayDiv.textContent == "") {
         return;
-    } 
-    
+    }
+
     else {
-        
-        if(num1 && !num2) {
+
+        if (num1 && !num2) {
             clearDisplay = true;
-            currentOperator= subtract;
+            currentOperator = subtract;
 
             num1Stored = true;
-        } else if(num1 && num2 && currentOperator) {
+        } else if (num1 && num2 && currentOperator) {
             const result = operate(currentOperator, num1, num2);
             displayDiv.textContent = result;
             num1 = result;
@@ -161,61 +196,100 @@ subtractBut.addEventListener('click', function () {
     }
 });
 multiplyBut.addEventListener('click', function () {
+    console.log('Multiply button is pressed.');
+    //check if display is empty
+    if (displayDiv.textContent == "") {
+        return;
+    }
 
+    else {
+
+        if (num1 && !num2) {
+            clearDisplay = true;
+            currentOperator = multiply;
+
+            num1Stored = true;
+        } else if (num1 && num2 && currentOperator) {
+            const result = operate(currentOperator, num1, num2);
+            displayDiv.textContent = result;
+            num1 = result;
+            num2 = null;
+            currentOperator = multiply;
+
+            clearDisplay = true;
+            num1Stored = true;
+        }
+        else {
+            return;
+        }
+    }
 });
 divideBut.addEventListener('click', function () {
+    console.log('Divide button is pressed.');
+    //check if display is empty
+    if (displayDiv.textContent == "") {
+        return;
+    }
 
+    else {
+
+        if (num1 && !num2) {
+            clearDisplay = true;
+            currentOperator = divide;
+
+            num1Stored = true;
+        } else if (num1 && num2 && currentOperator) {
+            const result = operate(currentOperator, num1, num2);
+            displayDiv.textContent = result;
+            num1 = result;
+            num2 = null;
+            currentOperator = divide;
+
+            clearDisplay = true;
+            num1Stored = true;
+        }
+        else {
+            return;
+        }
+    }
 });
-
 clearBut.addEventListener('click', function () {
-    displayDiv.textContent = '';
+    num1 = null;
+    num2 = null;
+    currentOperator = null;
+    displayDiv.textContent = "";
+    num1Stored = false;
+    clearDisplay = false;
 });
 enterBut.addEventListener('click', function () {
-    //return nothing if num1 and num2 don't exist
-    //return nothing if num2 don't exist
-    //return operation if num1 and num2 exist
-    if (num1 && num2) {
-        let currentcurrentOperator= checkCurrentOperator(operator);
-        const result = operate(currentOperator, num1, num2);
-
+    //complete using num1 as num2 if num2 doesn't exist
+    if (num1 && currentOperator && !num2) {
+        const result = operate(currentOperator, num1, num1);
         displayDiv.textContent = result;
         num1 = result;
         num2 = null;
-        currentOperator= null;
+        currentOperator = null;
+
         clearDisplay = true;
-        storedResult = true;
+        num1Stored = false;
+    } else if (num1 && num2 && currentOperator) {
+        const result = operate(currentOperator, num1, num2);
+        console.log(result);
+        displayDiv.textContent = result;
+        num1 = result;
+        num2 = null;
+        currentOperator = null;
+
+        clearDisplay = true;
+        num1Stored = false;
     }
 });
 
-//checks what the current currentOperatoris
-/**function checkCurrentOperator(operator) {
-    switch (operator) {
-        case 'add':
-            return add;
-        case 'subtract':
-            return subtract;
-        case 'multiply':
-            return multiply;
-        case 'divide':
-            return divide;
-        default:
-            return 'checkCurrentcurrentOperatorfunction did not work as intended.';
-    }
-}**/
 
 //populates the display when number button clicked
 function populateDisplay(num) {
     displayDiv.textContent = displayDiv.textContent + num;
 }
-
-/**whenever a number is added to the display, the display will be stored in either num1 or num2
- * the display will always stored in num1 unless the "currentOperator" exists
- * an currentOperatorwill be stored in currentcurrentOperatorwhenever an currentOperatorbutton is clicked
- * 
- * using an currentOperatorto compute equation: if num1, num2, and currentcurrentOperatorexist, pressing an currentOperatorwill compute the equation, store the result in num1, clear num2, and store the respective currentOperatorin currentOperator
- * 
- * **/
-
 
 //selectors for displaying variables
 const num1Dis = document.querySelector('#num1');
@@ -224,12 +298,11 @@ const currentOperatorDis = document.querySelector('#currentOperator');
 const clearDisplayDis = document.querySelector('#clearDisplay');
 const num1StoredDis = document.querySelector('#num1Stored');
 
-setInterval(function(){ 
+setInterval(function () {
     //this code runs every second 
     num1Dis.textContent = num1;
     num2Dis.textContent = num2;
     currentOperatorDis.textContent = currentOperator;
     clearDisplayDis.textContent = clearDisplay;
     num1StoredDis.textContent = num1Stored;
-
 }, 1000);
