@@ -47,55 +47,48 @@ let clearDisplay = false;
 
 let num1Stored = false;
 
-//event listeners to add number to display when respective button is clicked
-oneBut.addEventListener('click', function () {
+function addtoDisplay(num) {
     if (clearDisplay) {
         displayDiv.textContent = '';
         clearDisplay = false;
     }
-    populateDisplay('1');
+    populateDisplay(num);
     if (num1Stored) num2 = parseFloat(displayDiv.textContent);
     else num1 = parseFloat(displayDiv.textContent);
+}
+
+//event listeners for numbers
+oneBut.addEventListener('click', function () {
+    addtoDisplay(1);
 });
 twoBut.addEventListener('click', function () {
-    if (clearDisplay) {
-        displayDiv.textContent = '';
-        clearDisplay = false;
-    }
-    populateDisplay('2');
-    if (num1Stored) num2 = parseFloat(displayDiv.textContent);
-    else num1 = parseFloat(displayDiv.textContent);
+    addtoDisplay(2);
 });
 threeBut.addEventListener('click', function () {
-    if (clearDisplay) {
-        displayDiv.textContent = '';
-        clearDisplay = false;
-    }
-    populateDisplay('3');
-    if (num1Stored) num2 = parseFloat(displayDiv.textContent);
-    else num1 = parseFloat(displayDiv.textContent);
+    addtoDisplay(3);
 });
 fourBut.addEventListener('click', function () {
-    populateDisplay('4');
+    addtoDisplay(4);
 });
 fiveBut.addEventListener('click', function () {
-    populateDisplay('5');
+    addtoDisplay(5);
 });
 sixBut.addEventListener('click', function () {
-    populateDisplay('6');
+    addtoDisplay(6);
 });
 sevenBut.addEventListener('click', function () {
-    populateDisplay('7');
+    addtoDisplay(7);
 });
 eightBut.addEventListener('click', function () {
-    populateDisplay('8');
+    addtoDisplay(8);
 });
 nineBut.addEventListener('click', function () {
-    populateDisplay('9');
+    addtoDisplay(9);
 });
 zeroBut.addEventListener('click', function () {
-    populateDisplay('0');
+    addtoDisplay(0);
 });
+//event listener to add dot to display
 dotBut.addEventListener('click', function() {
     if (displayDiv.textContent.includes('.')) {
         return;
@@ -103,29 +96,45 @@ dotBut.addEventListener('click', function() {
     if (clearDisplay) {
         displayDiv.textContent = '.';
         clearDisplay = false;
+        return;
     }
     populateDisplay('.');
     if (num1Stored) num2 = parseFloat(displayDiv.textContent);
     else num1 = parseFloat(displayDiv.textContent);
 });
+//event listener to change signs of display
 signBut.addEventListener('click', function() {
-    if (clearDisplay) {
-        displayDiv.textContent = '-';
-        clearDisplay = false;
+    //return nothing if display is empty
+    if (displayDiv.textContent.length === 0) {
+        return;
     } else {
-        //current num is positive
+        //add negative sign to display if number is positive
         if(parseFloat(displayDiv.textContent) > 0) {
             displayDiv.textContent = '-' + displayDiv.textContent;
-        } else {
+        } 
+        //change display to abs value of itself if display is negative
+        else {
             displayDiv.textContent = Math.abs(parseFloat(displayDiv.textContent));
         }
+        //store the new display in either num1 or num2
         if (num1Stored) num2 = parseFloat(displayDiv.textContent);
         else num1 = parseFloat(displayDiv.textContent);
     }
-    
 });
+//event lister to change display into percentage
 percentageBut.addEventListener('click', function() {
+    console.log('Percentage button is pressed.')
+    //return nothing if display is empty
+    if (displayDiv.textContent.length === 0 || displayDiv.textContent == '.') {
+        return;
+    } else {
+        console.log('b');
+        //current num is positive
+        displayDiv.textContent = parseFloat(displayDiv.textContent) * 0.01;
 
+        if (num1Stored) num2 = parseFloat(displayDiv.textContent);
+        else num1 = parseFloat(displayDiv.textContent);
+    }
 });
 
 
