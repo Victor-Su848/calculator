@@ -1,20 +1,3 @@
-//operate functions
-function add(num1, num2) {
-    return num1 + num2;
-}
-function subtract(num1, num2) {
-    return num1 - num2;
-}
-function multiply(num1, num2) {
-    return num1 * num2;
-}
-function divide(num1, num2) {
-    return num1 / num2;
-}
-function operate(func, num1, num2) {
-    return func(num1, num2);
-}
-
 //selector variables
 const oneBut = document.querySelector('#one');
 const twoBut = document.querySelector('#two');
@@ -46,6 +29,23 @@ let currentOperator = null;
 let clearDisplay = false;
 let num1Stored = false;
 
+//operate functions
+function add(num1, num2) {
+    return num1 + num2;
+}
+function subtract(num1, num2) {
+    return num1 - num2;
+}
+function multiply(num1, num2) {
+    return num1 * num2;
+}
+function divide(num1, num2) {
+    return num1 / num2;
+}
+function operate(func, num1, num2) {
+    return func(num1, num2);
+}
+
 //checks if char is a number
 function isNumber(char) {
     if (typeof char !== 'string') {
@@ -58,7 +58,6 @@ function isNumber(char) {
 
     return !isNaN(char);
 }
-
 //add a number to a display
 function addtoDisplay(num) {
     if (clearDisplay) {
@@ -70,7 +69,6 @@ function addtoDisplay(num) {
     else num1 = parseFloat(displayDiv.textContent);
 }
 //perform arithmetic and correctly store the number
-//add checking for dividing by zero
 function performArithmetic(arithmetic) {
     //check if display is empty
     if (displayDiv.textContent == "") {
@@ -90,7 +88,7 @@ function performArithmetic(arithmetic) {
             console.log(num2);
             console.log(currentOperator);
             if (num2 == 0 && currentOperator == divide) {
-                checkZeroDenom();
+                zeroDenomReset();
                 return;
             }
             let result = operate(currentOperator, num1, num2);
@@ -143,6 +141,21 @@ function selectCurrentOperator(arithmetic) {
     divideBut.classList.remove("currentOperator-background");
     if (arithmetic) arithmeticButton.classList.add("currentOperator-background");
 }
+//resets the calculator and displays ERROR in display 
+function zeroDenomReset() {
+    num1 = null;
+    num2 = null;
+    currentOperator = null;
+    clearDisplay = true;
+    num1Stored = false;
+    displayDiv.textContent = "ERROR";
+    selectCurrentOperator();
+}
+//populates the display when number button clicked
+function populateDisplay(num) {
+    displayDiv.textContent = displayDiv.textContent + num;
+}
+
 
 //event listeners for numbers
 oneBut.addEventListener('click', function () {
@@ -209,7 +222,7 @@ signBut.addEventListener('click', function () {
         else num1 = parseFloat(displayDiv.textContent);
     }
 });
-//event lister to change display into percentage
+//event listener to change display into percentage
 percentageBut.addEventListener('click', function () {
     console.log('Percentage button is pressed.')
     //return nothing if display is empty
@@ -224,7 +237,7 @@ percentageBut.addEventListener('click', function () {
     }
 });
 
-//currentOperatorevent listeners to track what the current currentOperatoris
+//event listeners for arithmetics
 addBut.addEventListener('click', function () {
     console.log('Plus button is pressed.');
     performArithmetic(add);
@@ -242,6 +255,7 @@ divideBut.addEventListener('click', function () {
     performArithmetic(divide);
 });
 
+//event listener to clear the calculator
 clearBut.addEventListener('click', function () {
     num1 = null;
     num2 = null;
@@ -252,15 +266,23 @@ clearBut.addEventListener('click', function () {
 
     selectCurrentOperator();
 });
+
 //add checking for dividing by zero
 enterBut.addEventListener('click', function () {
     if (currentOperator) {
         let result;
-        if (num1 && num2) {
-            
+        if (num1 != null && num2 != null) {
+            console.log('a');
+            if(num2 == 0 && currentOperator == divide) {
+                zeroDenomReset();
+                return;
+            }
             result = operate(currentOperator, num1, num2);
-        } else if (num1 && !num2) {
-            
+        } else if (num1 != null && num2 == null) {
+            if(num1 == 0 && currentOperator == divide) {
+                zeroDenomReset();
+                return;
+            }
             result = operate(currentOperator, num1, num1);
         }
         result = cutOffNum(result);
@@ -273,21 +295,9 @@ enterBut.addEventListener('click', function () {
         selectCurrentOperator();
     }
 });
-function checkZeroDenom() {
 
-    num1 = null;
-    num2 = null;
-    currentOperator = null;
-    clearDisplay = true;
-    num1Stored = false;
-    displayDiv.textContent = "ERROR";
-    selectCurrentOperator();
 
-}
-//populates the display when number button clicked
-function populateDisplay(num) {
-    displayDiv.textContent = displayDiv.textContent + num;
-}
+//code used to display variables on screen
 /**
 //selectors for displaying variables
 const num1Dis = document.querySelector('#num1');
